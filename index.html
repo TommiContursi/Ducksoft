@@ -3,8 +3,67 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ducksoft – omien projektien koti vuodesta 1999</title>
-<meta name="description" content="Ducksoft on Tommi Contursin omien projektien koti vuodesta 1999. Nyt työn alla: Polku, ulkoilukartta ja reittisuunnittelija.">
+<title>Ducksoft – Tommi Contursin projektit ja Polku-ulkoilukartta</title>
+<meta name="description" content="Ducksoft on Tommi Contursin omien projektien koti vuodesta 1999. Nyt työn alla on Polku, ilmainen ulkoilukartta ja reittisuunnittelija koko Suomeen.">
+<meta name="author" content="Tommi Contursi">
+<meta name="theme-color" content="#2a5cff">
+<link rel="canonical" href="https://ducksoft.fi/">
+<link rel="alternate" hreflang="fi" href="https://ducksoft.fi/">
+<link rel="alternate" hreflang="en" href="https://ducksoft.fi/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://ducksoft.fi/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ducksoft">
+<meta property="og:url" content="https://ducksoft.fi/">
+<meta property="og:title" content="Ducksoft – Tommi Contursin projektit ja Polku-ulkoilukartta">
+<meta property="og:description" content="Tommi Contursin omien projektien koti vuodesta 1999. Nyt työn alla on Polku, ilmainen ulkoilukartta ja reittisuunnittelija koko Suomeen.">
+<meta property="og:image" content="https://ducksoft.fi/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Pikselilogo DUCKSOFT, lentäviä ankkoja ja Pikseli-Tommi lammen rannalla">
+<meta property="og:locale" content="fi_FI">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://ducksoft.fi/#website",
+      "url": "https://ducksoft.fi/",
+      "name": "Ducksoft",
+      "inLanguage": ["fi", "en"],
+      "publisher": { "@id": "https://ducksoft.fi/#tommi" }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://ducksoft.fi/#tommi",
+      "name": "Tommi Contursi",
+      "url": "https://ducksoft.fi/",
+      "image": "https://ducksoft.fi/og.png",
+      "email": "mailto:tommi@ducksoft.fi",
+      "jobTitle": "Head of Digital Development and IT",
+      "worksFor": { "@type": "Organization", "name": "Nordic Business Forum" },
+      "alumniOf": { "@type": "CollegeOrUniversity", "name": "Jyväskylän yliopisto" },
+      "knowsAbout": ["Web development", "Graphic design", "WordPress", "WooCommerce", "Salesforce", "SEO", "IT security"],
+      "sameAs": ["https://fi.linkedin.com/in/tommicontursi/", "https://www.tommicontursi.com/", "https://github.com/TommiContursi"]
+    },
+    {
+      "@type": "WebApplication",
+      "name": "Polku",
+      "url": "https://polku.si/",
+      "description": "Ilmainen ulkoilukartta ja monilajinen reittisuunnittelija koko Suomeen.",
+      "applicationCategory": "TravelApplication",
+      "operatingSystem": "Web",
+      "isAccessibleForFree": true,
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+      "author": { "@id": "https://ducksoft.fi/#tommi" }
+    }
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
@@ -220,13 +279,12 @@
       </div>
     </div>
     <div class="wrap">
-      <h1 id="hero-title" class="sr">Ducksoft</h1>
       <div class="play-wrap">
         <canvas id="play" aria-hidden="true"></canvas>
         <p class="sticker" aria-hidden="true" data-en="Hit the flying ducks!">Osu lentäviin ankkoihin!</p>
       </div>
       <div class="intro">
-        <p class="tagline" data-en="Home of Tommi Contursi’s own projects since 1999.">Tommi Contursin omien projektien koti vuodesta 1999.</p>
+        <h1 class="tagline" id="hero-title"><span class="sr">Ducksoft: </span><span data-en="Home of Tommi Contursi’s own projects since 1999.">Tommi Contursin omien projektien koti vuodesta 1999.</span></h1>
         <div>
           <p class="sub" data-en="It started with mini games for friends, then came over twenty years of graphic design, the web and IT. Today it’s Polku, a free outdoor map and route planner for all of Finland.">Alussa oli minipelejä kavereille, sitten yli 20 vuotta grafiikkaa, webiä ja IT:tä. Nyt työn alla on Polku, ilmainen ulkoilukartta ja reittisuunnittelija koko Suomeen.</p>
           <div class="actions">
@@ -250,9 +308,9 @@
       <div>
         <p class="sticker" data-en="Now playing">Nyt pelissä</p>
         <h2 id="polku-title">Polku</h2>
-        <p class="lead" data-en="A free outdoor map and multi-sport route planner for Finland. It runs in the browser on your phone or computer, with no install and no account.">Ilmainen ulkoilukartta ja monilajinen reittisuunnittelija koko Suomeen. Toimii selaimessa puhelimella ja koneella, ilman asennusta ja tiliä.</p>
+        <p class="lead" data-en="A free outdoor map and multi-sport route planner for Finland. It runs in the browser on your phone or computer, with no install and no account.">Ilmainen ulkoilukartta ja monilajinen reittisuunnittelija koko Suomeen. Toimii selaimessa puhelimella ja tietokoneella ilman asennusta tai tiliä.</p>
         <ul class="feats">
-          <li data-en="Mix sports in one trip: cycle to the shore, paddle across and run on an island.">Yhdistä lajeja samalle reissulle: pyöräile rantaan, melo yli ja juokse saaressa.</li>
+          <li data-en="Mix sports in one trip: cycle to the shore, paddle across and run on an island.">Yhdistä lajeja samalle reissulle: pyöräile rantaan, melo salmen yli ja juokse saaressa.</li>
           <li data-en="Weather along the route at the time you get there: wind, temperature and rain.">Sää reitin varrella juuri silloin, kun olet kohdalla: tuuli, lämpötila ja sade.</li>
           <li data-en="Trail difficulty, fallen trees and access restrictions on the map and in the route check.">Polkujen vaikeus, kaatuneet puut ja kulkurajoitukset kartalla ja reitin tarkistuksessa.</li>
         </ul>
@@ -275,7 +333,7 @@
     <div class="wrap">
       <div class="story-head">
         <h2 id="tarina-title" data-en="The story, level by level">Tarina tasoittain</h2>
-        <p class="lead" data-en="From mini games to graphic design, the web and IT. All of it is behind Polku.">Minipeleistä graafiseen suunnitteluun, webiin ja IT:hen. Kaikki se on Polun takana.</p>
+        <p class="lead" data-en="From mini games to graphic design, the web and IT. All of it is behind Polku.">Minipeleistä graafiseen suunnitteluun, webiin ja IT:hen. Kaikki tämä on Polun taustalla.</p>
       </div>
       <ol class="levels">
         <li class="level">
@@ -296,35 +354,35 @@
           <div class="lvl-top"><span class="no" data-en="Level 3">Taso 3</span><span class="year">2008</span></div>
           <div class="body">
             <h3 data-en="Media assistant">Media-assistentti</h3>
-            <p data-en="Graduates as a media assistant and makes printed marketing material as a marketing assistant at 3M.">Media-assistentiksi Omniasta ja markkinointiassistentiksi 3M:lle tekemään painettua markkinointia.</p>
+            <p data-en="Graduates as a media assistant and makes printed marketing material as a marketing assistant at 3M.">Valmistuu Omniasta media-assistentiksi ja tekee 3M:llä painettua markkinointimateriaalia markkinointiassistenttina.</p>
           </div>
         </li>
         <li class="level paused">
           <div class="lvl-top"><span class="no" data-en="Paused">Tauko</span><span class="year">2009</span></div>
           <div class="body">
             <h3 data-en="Game paused">Peli pysähtyy</h3>
-            <p data-en="Military service, a construction site and engineering studies at Metropolia.">Armeija, rakennustyömaa ja insinööriopintoja Metropoliassa.</p>
+            <p data-en="Military service, a construction site and engineering studies at Metropolia.">Armeija, töitä rakennustyömaalla ja insinööriopintoja Metropoliassa.</p>
           </div>
         </li>
         <li class="level continue">
           <div class="lvl-top"><span class="no" data-en="Continue">Jatka</span><span class="year">2014</span></div>
           <div class="body">
             <h3 data-en="Ducksoft returns">Ducksoft palaa</h3>
-            <p data-en="Freelance logos, identities and websites, plus design and webmaster work for student associations.">Freelancerina logoja, ilmeitä ja verkkosivuja. Lisäksi opiskelijajärjestöjen graafikko ja webmaster.</p>
+            <p data-en="Freelance logos, identities and websites, plus design and webmaster work for student associations.">Logoja, ilmeitä ja verkkosivuja freelancerina sekä graafikon ja webmasterin töitä opiskelijajärjestöissä.</p>
           </div>
         </li>
         <li class="level">
           <div class="lvl-top"><span class="no" data-en="Level 4">Taso 4</span><span class="year">2015</span></div>
           <div class="body">
             <h3 data-en="Web developer">Web-kehittäjä</h3>
-            <p data-en="Responsive websites and online shops at Online Solutions, plus work on the OnlineBusiness ERP.">Online Solutionsilla responsiivisia sivustoja ja verkkokauppoja sekä OnlineBusiness-toiminnanohjausjärjestelmää.</p>
+            <p data-en="Responsive websites and online shops at Online Solutions, plus work on the OnlineBusiness ERP.">Responsiivisia sivustoja ja verkkokauppoja Online Solutionsilla sekä OnlineBusiness-toiminnanohjausjärjestelmän kehitystä.</p>
           </div>
         </li>
         <li class="level">
           <div class="lvl-top"><span class="no" data-en="Level 5">Taso 5</span><span class="year">2017</span></div>
           <div class="body">
             <h3>Nordic Business Forum</h3>
-            <p data-en="Design and Development Specialist: websites, online shops, the live stream platform and event materials for Finland, Sweden and Norway.">Design and Development Specialist: verkkosivut, verkkokaupat, striimialusta ja tapahtumamateriaalit Suomeen, Ruotsiin ja Norjaan.</p>
+            <p data-en="Design and Development Specialist: websites, online shops, the live stream platform and event materials for Finland, Sweden and Norway.">Design and Development Specialist: verkkosivut, verkkokaupat, striimausalusta ja tapahtumien materiaalit Suomeen, Ruotsiin ja Norjaan.</p>
           </div>
         </li>
         <li class="level boss">
@@ -339,7 +397,7 @@
           <div class="body">
             <div>
               <h3>Polku</h3>
-              <p data-en="Ducksoft is now home to Tommi’s own projects. First up: Polku, a map and route planner for getting outdoors.">Ducksoft on nyt Tommin omien projektien koti. Ensimmäisenä Polku, kartta ja reittisuunnittelija ulkoiluun.</p>
+              <p data-en="Ducksoft is now home to Tommi’s own projects. First up: Polku, a map and route planner for getting outdoors.">Ducksoft on nyt Tommin omien projektien koti. Ensimmäisenä vuorossa on Polku, ulkoilukartta ja reittisuunnittelija.</p>
             </div>
             <a class="btn primary" href="https://polku.si/" data-en="Open Polku">Avaa Polku</a>
           </div>
@@ -352,13 +410,13 @@
     <div class="wrap">
       <div class="story-head">
         <h2 id="osaaminen-title" data-en="Inventory">Inventaario</h2>
-        <p class="lead" data-en="What over twenty years of work has left in the backpack.">Mitä yli 20 vuoden aikana on kertynyt reppuun.</p>
+        <p class="lead" data-en="What over twenty years of work has left in the backpack.">Osaaminen, jota on kertynyt reppuun yli 20 vuoden aikana.</p>
       </div>
       <div class="items">
         <article class="item">
           <svg class="px" data-sprite="screen" viewBox="0 0 12 12" aria-hidden="true"></svg>
           <h3 data-en="Websites and online shops">Verkkosivut ja -kaupat</h3>
-          <p data-en="Design, build and upkeep, from small sites to e-commerce and streaming.">Suunnittelu, toteutus ja ylläpito pienistä sivuista verkkokauppoihin ja striimaukseen.</p>
+          <p data-en="Design, build and upkeep, from small sites to e-commerce and streaming.">Suunnittelu, toteutus ja ylläpito pienistä sivustoista verkkokauppoihin ja striimausalustoihin.</p>
           <ul class="chips"><li>WordPress</li><li>WooCommerce</li><li>PHP</li><li>JavaScript</li><li>HTML &amp; CSS</li><li>Git</li></ul>
         </article>
         <article class="item">
@@ -376,8 +434,8 @@
         <article class="item">
           <svg class="px" data-sprite="chart" viewBox="0 0 12 12" aria-hidden="true"></svg>
           <h3 data-en="Marketing">Markkinointi</h3>
-          <p data-en="Getting found and measuring what works. Google certified in search ads and analytics.">Löydettävyys ja sen mittaaminen, mikä toimii. Googlen sertifikaatit hakumainontaan ja analytiikkaan.</p>
-          <ul class="chips"><li>SEO</li><li>SEM</li><li>Google Analytics</li><li data-en="Social media">Some</li></ul>
+          <p data-en="Getting found and measuring what works. Google certified in search ads and analytics.">Näkyvyys hakukoneissa ja tulosten mittaaminen. Googlen sertifikaatit hakusanamainontaan ja analytiikkaan.</p>
+          <ul class="chips"><li>SEO</li><li>SEM</li><li>Google Analytics</li><li data-en="Social media">Sosiaalinen media</li></ul>
         </article>
       </div>
       <div class="extras">
@@ -393,7 +451,7 @@
           <h3 data-en="Side quests">Sivutehtävät</h3>
           <ul class="list">
             <li data-en="Moderator on the io-tech.fi forum, Finland’s busiest tech forum">Moderaattori io-tech.fi-keskustelupalstalla, Suomen vilkkaimmalla tekniikkafoorumilla</li>
-            <li data-en="Webmaster and graphic designer for student associations Pörssi, Dumppi and JES">Webmaster ja graafikko opiskelijajärjestöissä Pörssi, Dumppi ja JES</li>
+            <li data-en="Webmaster and graphic designer for student associations Pörssi, Dumppi and JES">Webmaster ja graafikko opiskelijajärjestöissä Pörssi ry, Dumppi ry ja JES</li>
           </ul>
         </article>
       </div>
@@ -406,7 +464,7 @@
         <svg class="px tommi" data-sprite="tommi" viewBox="0 0 16 22" role="img" aria-label="Pikseli-Tommi" data-en-label="Pixel Tommi"></svg>
         <div>
           <h2 id="yhteys-title" data-en="Player 2, join in?">Pelaaja 2, liitytkö?</h2>
-          <p data-en="A question about Polku, or something else on your mind? Send an email.">Kysyttävää Polusta tai jotain muuta mielessä? Laita sähköpostia.</p>
+          <p data-en="A question about Polku, or something else on your mind? Send an email.">Kysyttävää Polusta tai jotain muuta mielessä? Lähetä sähköpostia.</p>
         </div>
       </div>
       <div class="actions">
@@ -507,8 +565,10 @@
 
   /* ---------- Language ---------- */
   const T = {
-    fi: { title: "Ducksoft – omien projektien koti vuodesta 1999", quack: "Kvaak!", miss: "Ohi!" },
-    en: { title: "Ducksoft – home of Tommi Contursi’s own projects since 1999", quack: "Quack!", miss: "Miss!" },
+    fi: { title: "Ducksoft – Tommi Contursin projektit ja Polku-ulkoilukartta",
+           desc: "Ducksoft on Tommi Contursin omien projektien koti vuodesta 1999. Nyt työn alla on Polku, ilmainen ulkoilukartta ja reittisuunnittelija koko Suomeen.", quack: "Kvaak!", miss: "Ohi!" },
+    en: { title: "Ducksoft – Tommi Contursi’s projects and the Polku outdoor map",
+           desc: "Ducksoft is home to Tommi Contursi’s own projects since 1999. Now in the works: Polku, a free outdoor map and route planner for all of Finland.", quack: "Quack!", miss: "Miss!" },
   };
   let lang = "fi";
   function fillYears() {
@@ -520,6 +580,8 @@
     lang = l;
     document.documentElement.lang = l;
     document.title = T[l].title;
+    document.querySelector('meta[name="description"]').content = T[l].desc;
+    document.querySelector('link[rel="canonical"]').href = "https://ducksoft.fi/" + (l === "en" ? "?lang=en" : "");
     document.querySelectorAll("[data-en]").forEach(el => {
       el.dataset.fi ??= el.textContent;
       el.textContent = l === "en" ? el.dataset.en : el.dataset.fi;
@@ -532,10 +594,19 @@
     fillYears();
     try { localStorage.setItem("lang", l); } catch {}
   }
-  document.querySelectorAll("[data-lang]").forEach(b => b.addEventListener("click", () => setLang(b.dataset.lang)));
+  document.querySelectorAll("[data-lang]").forEach(b => b.addEventListener("click", () => {
+    setLang(b.dataset.lang);
+    history.replaceState(null, "", (b.dataset.lang === "en" ? "?lang=en" : location.pathname) + location.hash); // shareable per-language URL
+  }));
   let saved = null;
   try { saved = localStorage.getItem("lang"); } catch {}
-  setLang(saved === "fi" || saved === "en" ? saved : (navigator.language || "").toLowerCase().startsWith("fi") ? "fi" : "en");
+  // ?lang= wins, then the visitor's saved choice, then the browser language. Crawlers always get Finnish at "/" so the
+  // Finnish page is what gets indexed there; English is indexed at ?lang=en (see hreflang in <head>).
+  const urlLang = new URLSearchParams(location.search).get("lang");
+  const crawler = /bot|crawl|spider|slurp|preview/i.test(navigator.userAgent);
+  setLang(urlLang === "fi" || urlLang === "en" ? urlLang
+        : saved === "fi" || saved === "en" ? saved
+        : !crawler && !(navigator.language || "").toLowerCase().startsWith("fi") ? "en" : "fi");
 
   /* ---------- Score ---------- */
   let score = 0, hi = 0;
