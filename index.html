@@ -1,0 +1,838 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ducksoft – omien projektien koti vuodesta 1999</title>
+<meta name="description" content="Ducksoft on Tommi Contursin omien projektien koti vuodesta 1999. Nyt työn alla: Polku, ulkoilukartta ja reittisuunnittelija.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #000;
+    --paper: #fff;
+    --duck: #ffd60a;
+    --beak: #ff7a00;
+    --pond: #2a5cff;
+    --deep: #1b3fbf;
+    --reed: #3ddc84;
+    --pause: #d9d9d9;
+    --b: 4px solid var(--ink);
+    --shadow: 8px 8px 0 var(--ink);
+    --pixel: "Pixelify Sans", ui-monospace, monospace;
+    --body: "Archivo", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 400 1.0625rem/1.6 var(--body); }
+  h1, h2, h3 { font-family: var(--pixel); font-weight: 700; line-height: 1.05; margin: 0; }
+  p { margin: 0 0 1em; }
+  a { color: inherit; }
+  :focus-visible { outline: 4px solid var(--beak); outline-offset: 3px; }
+  .wrap { max-width: 1160px; margin: 0 auto; padding: 0 16px; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  svg.px { display: block; shape-rendering: crispEdges; }
+  [id] { scroll-margin-top: 72px; }
+
+  /* header */
+  .site-header { border-bottom: var(--b); background: var(--paper); position: sticky; top: 0; z-index: 10; }
+  .bar { display: flex; align-items: center; gap: 12px 20px; min-height: 68px; flex-wrap: wrap; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 700 1.6rem var(--pixel); margin-right: auto; }
+  .logo svg { width: 36px; height: 36px; }
+  .logo span { color: #d65a00; } /* darker beak: 3:1+ on white */
+  nav ul { list-style: none; display: flex; gap: 4px; margin: 0; padding: 0; }
+  nav a { display: block; padding: 6px 12px; font: 500 1.05rem var(--pixel); text-decoration: none; border: 3px solid transparent; }
+  nav a:hover { border-color: var(--ink); background: var(--duck); }
+  .lang { display: flex; border: 3px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); }
+  .lang button { font: 700 1rem var(--pixel); background: var(--paper); border: 0; padding: 5px 11px; cursor: pointer; color: var(--ink); }
+  .lang button + button { border-left: 3px solid var(--ink); }
+  .lang button[aria-pressed="true"] { background: var(--ink); color: var(--duck); }
+
+  /* buttons */
+  .btn { display: inline-block; font: 700 1.15rem var(--pixel); text-decoration: none; padding: 14px 22px; border: var(--b); color: var(--ink);
+         background: var(--paper); box-shadow: 6px 6px 0 var(--ink); transition: transform .08s steps(2), box-shadow .08s steps(2); }
+  .btn:hover { transform: translate(3px, 3px); box-shadow: 3px 3px 0 var(--ink); }
+  .btn:active { transform: translate(6px, 6px); box-shadow: 0 0 0 var(--ink); }
+  .btn.primary { background: var(--duck); }
+  .btn.dark { background: var(--ink); color: var(--duck); }
+  .actions { display: flex; gap: 16px; flex-wrap: wrap; }
+
+  .sticker { display: inline-block; font: 700 1.05rem var(--pixel); background: var(--duck); border: 3px solid var(--ink);
+             box-shadow: 4px 4px 0 var(--ink); padding: 6px 12px; transform: rotate(-3deg); margin: 0; }
+
+  /* hero */
+  .hero { background-color: var(--pond); color: var(--paper); border-bottom: var(--b);
+          background-image: linear-gradient(rgba(255,255,255,.08) 2px, transparent 2px), linear-gradient(90deg, rgba(255,255,255,.08) 2px, transparent 2px);
+          background-size: 32px 32px; padding-bottom: 64px; }
+  .hud { background: var(--ink); font: 500 1rem var(--pixel); }
+  .hud .wrap { display: flex; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap; padding-top: 8px; padding-bottom: 8px; }
+  .hud b { color: var(--duck); }
+  .hud .dup { display: none; }
+  @keyframes ticker { to { transform: translateX(-50%); } }
+  @media (max-width: 860px) {
+    /* one scrolling line instead of three wrapped rows; .dup is a second copy so the loop is seamless */
+    .hud { overflow: hidden; }
+    .hud .wrap { flex-wrap: nowrap; justify-content: flex-start; gap: 0; width: max-content; max-width: none; padding: 8px 0; animation: ticker 20s linear infinite; }
+    .hud .wrap > span { white-space: nowrap; padding: 0 16px; }
+    .hud .dup { display: inline; }
+  }
+  @media (max-width: 860px) and (prefers-reduced-motion: reduce) { .hud { overflow-x: auto; } }
+  .play-wrap { position: relative; margin-top: 24px; }
+  #play { display: block; width: 100%; touch-action: pan-y; cursor: crosshair; }
+  @media (pointer: fine) { #play { cursor: none; } } /* the canvas draws its own crosshair */
+  .play-wrap .sticker { position: absolute; right: 0; bottom: -14px; transform: rotate(3deg); color: var(--ink); pointer-events: none; }
+  .intro { display: grid; grid-template-columns: 1.1fr .9fr; gap: 24px 56px; align-items: end; margin-top: 40px; }
+  .tagline { font: 700 clamp(2rem, 4.6vw, 3.5rem)/1.05 var(--pixel); margin: 0; }
+  .sub { font-size: 1.2rem; max-width: 30em; margin-bottom: 28px; }
+
+  /* generic sections */
+  .sec { padding: 96px 0; border-bottom: var(--b); }
+  .sec h2 { font-size: clamp(2.2rem, 5vw, 3.6rem); margin-bottom: 18px; }
+  .lead { font-size: 1.2rem; max-width: 34em; }
+
+  /* polku */
+  .polku { background-color: var(--duck);
+           background-image: linear-gradient(rgba(0,0,0,.07) 2px, transparent 2px), linear-gradient(90deg, rgba(0,0,0,.07) 2px, transparent 2px);
+           background-size: 32px 32px; }
+  .polku-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 56px; align-items: center; }
+  .mapcard { margin: 0; border: var(--b); box-shadow: 14px 14px 0 var(--ink); background: var(--paper); }
+  .browserbar { display: flex; align-items: center; gap: 6px; background: var(--ink); color: var(--paper); padding: 8px 12px; font: 500 1rem var(--pixel); }
+  .browserbar i { width: 12px; height: 12px; background: var(--paper); }
+  .browserbar i:nth-child(1) { background: var(--beak); } .browserbar i:nth-child(2) { background: var(--duck); } .browserbar i:nth-child(3) { background: var(--reed); }
+  .browserbar span { margin-left: 10px; }
+  #map { display: block; width: 100%; height: auto; image-rendering: pixelated; border-bottom: var(--b); }
+  .mapcard figcaption { display: flex; gap: 8px 18px; flex-wrap: wrap; align-items: center; padding: 10px 14px; font: 500 1rem var(--pixel); }
+  .key { display: inline-block; width: 22px; height: 10px; border: 2px solid var(--ink); margin-right: 6px; vertical-align: middle; }
+  .key.land { background: var(--beak); } .key.water { background: linear-gradient(var(--pond) 0 33%, var(--paper) 33% 67%, var(--pond) 67%); }
+  .polku h2 { font-size: clamp(3rem, 8vw, 5.5rem); margin: 18px 0 14px; }
+  .feats { list-style: none; padding: 0; margin: 0 0 22px; }
+  .feats li { position: relative; padding-left: 28px; margin-bottom: 10px; }
+  .feats li::before { content: ""; position: absolute; left: 0; top: .5em; width: 12px; height: 12px; background: var(--ink); }
+  .chips { list-style: none; padding: 0; margin: 0 0 32px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .chips li { font: 500 .95rem var(--pixel); background: var(--paper); border: 3px solid var(--ink); padding: 3px 10px; }
+
+  /* story */
+  .story-head { max-width: 40em; margin-bottom: 48px; }
+  .levels { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 28px; }
+  .level { border: var(--b); box-shadow: var(--shadow); background: var(--paper); transition: transform .1s steps(2), box-shadow .1s steps(2); }
+  .level:hover { transform: translate(-3px, -3px); box-shadow: 11px 11px 0 var(--ink); }
+  .lvl-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; border-bottom: var(--b); padding: 10px 16px; background: var(--duck); }
+  .lvl-top .no { font: 500 1rem var(--pixel); }
+  .lvl-top .year { font: 700 1.6rem var(--pixel); }
+  .level .body { padding: 18px 16px 6px; }
+  .level h3 { font-size: 1.5rem; margin-bottom: 10px; }
+  .level h3 a { text-decoration-thickness: 3px; }
+  .level.paused { background: var(--pause); }
+  .level.paused .lvl-top { background: var(--ink); color: var(--paper); }
+  .level.continue .lvl-top { background: var(--reed); }
+  .level.boss .lvl-top { background: var(--pond); color: var(--paper); }
+  .level.now { grid-column: 1 / -1; background: var(--ink); color: var(--paper); }
+  .level.now .lvl-top { background: var(--beak); color: var(--ink); border-bottom-color: var(--ink); }
+  .level.now .body { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 32px; padding-bottom: 18px; }
+  .level.now h3 { font-size: 2.2rem; color: var(--duck); }
+  .level.now p { max-width: 36em; margin: 0; }
+  .level.now .btn { box-shadow: 6px 6px 0 var(--duck); }
+
+  /* contact */
+  .contact { background: var(--beak); }
+  .player { display: flex; gap: 28px; align-items: flex-end; }
+  .player .tommi { width: 112px; height: 154px; flex: none; filter: drop-shadow(6px 6px 0 var(--ink)); }
+
+  /* skills */
+  .skills { background: var(--pond); color: var(--paper); }
+  .items { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 28px; }
+  .item { border: var(--b); box-shadow: var(--shadow); background: var(--paper); color: var(--ink); padding: 22px 20px 20px; }
+  .items .item:nth-child(1) { background: var(--duck); }
+  .items .item:nth-child(3) { background: var(--reed); }
+  .items .item:nth-child(4) { background: var(--beak); }
+  .item svg { width: 56px; height: 56px; margin-bottom: 16px; }
+  .item h3 { font-size: 1.45rem; margin-bottom: 10px; }
+  .item .chips { margin: 0; }
+  .extras { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 28px; }
+  .item.note { background: var(--ink); color: var(--paper); }
+  .item.note h3 { color: var(--duck); }
+  .list { margin: 0; padding-left: 1.1em; }
+  .list li { margin-bottom: .5em; }
+
+  .contact-grid { display: grid; grid-template-columns: 1fr auto; gap: 32px 56px; align-items: end; }
+  .contact p { font-size: 1.2rem; max-width: 30em; margin: 0; }
+  .contact .actions { justify-content: flex-end; }
+  .mail { font: 800 clamp(1.1rem, 3vw, 1.5rem) var(--body); word-break: break-all; } /* pixel "@" reads poorly */
+
+  footer { background: var(--ink); color: var(--paper); padding: 28px 0; font-size: .95rem; position: relative; }
+  .lane { position: absolute; left: 0; right: 0; bottom: 100%; height: 44px; overflow: hidden; pointer-events: none; }
+  .parade { position: absolute; bottom: 0; display: flex; flex-direction: row-reverse; align-items: flex-end; gap: 6px; animation: walk 26s linear infinite; }
+  .parade .mama { width: 44px; height: 44px; }
+  .parade .kid { width: 24px; height: 24px; animation: hop .5s steps(2) infinite; }
+  .parade .kid:nth-child(odd) { animation-delay: .25s; }
+  @keyframes walk { from { transform: translateX(-260px); } to { transform: translateX(100vw); } }
+  @keyframes hop { 50% { transform: translateY(-3px); } }
+  footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer kbd { font: 500 .95rem var(--pixel); color: var(--duck); }
+
+  .rain { position: fixed; top: -60px; width: 48px; height: 48px; pointer-events: none; z-index: 50; animation: fall linear forwards; }
+  @keyframes fall { to { transform: translateY(calc(100vh + 120px)); } }
+
+  @media (max-width: 860px) {
+    .intro, .polku-grid, .contact-grid, .extras { grid-template-columns: 1fr; }
+    .player .tommi { width: 72px; height: 99px; }
+    .contact .actions { justify-content: flex-start; }
+    .sec { padding: 64px 0; }
+    .site-header { position: static; }
+    nav { order: 3; width: 100%; margin: 0 0 8px -12px; }
+    .play-wrap .sticker { position: static; margin-bottom: 12px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="logo" href="#top" aria-label="Ducksoft"><svg class="px" data-sprite="duck" viewBox="0 0 16 16" aria-hidden="true"></svg><b>Duck<span>soft</span></b></a>
+    <nav aria-label="Päävalikko" data-en-label="Main menu">
+      <ul>
+        <li><a href="#polku">Polku</a></li>
+        <li><a href="#tarina" data-en="Story">Tarina</a></li>
+        <li><a href="#osaaminen" data-en="Skills">Osaaminen</a></li>
+        <li><a href="#yhteys" data-en="Contact">Yhteys</a></li>
+      </ul>
+    </nav>
+    <div class="lang" role="group" aria-label="Kieli / Language">
+      <button type="button" data-lang="fi" aria-pressed="true" lang="fi" aria-label="Suomeksi">FI</button><button type="button" data-lang="en" aria-pressed="false" lang="en" aria-label="In English">EN</button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hud" aria-hidden="true">
+      <div class="wrap">
+        <span><span data-en="Player 1">Pelaaja 1</span> <b>Tommi</b></span>
+        <span><span data-en="Score">Pisteet</span> <b data-score>00000</b></span>
+        <span><span data-en="Best">Ennätys</span> <b data-hi>00000</b></span>
+        <span><span data-en="Level">Taso</span> <b data-years>27</b></span>
+        <span><span data-en="Now playing">Nyt pelissä</span> <b>Polku</b></span>
+      </div>
+    </div>
+    <div class="wrap">
+      <h1 id="hero-title" class="sr">Ducksoft</h1>
+      <div class="play-wrap">
+        <canvas id="play" aria-hidden="true"></canvas>
+        <p class="sticker" aria-hidden="true" data-en="Hit the flying ducks!">Osu lentäviin ankkoihin!</p>
+      </div>
+      <div class="intro">
+        <p class="tagline" data-en="Home of Tommi Contursi’s own projects since 1999.">Tommi Contursin omien projektien koti vuodesta 1999.</p>
+        <div>
+          <p class="sub" data-en="It started with mini games for friends, then came over twenty years of graphic design, the web and IT. Today it’s Polku, a free outdoor map and route planner for all of Finland.">Alussa oli minipelejä kavereille, sitten yli 20 vuotta grafiikkaa, webiä ja IT:tä. Nyt työn alla on Polku, ilmainen ulkoilukartta ja reittisuunnittelija koko Suomeen.</p>
+          <div class="actions">
+            <a class="btn primary" href="#polku" data-en="Meet Polku">Tutustu Polkuun</a>
+            <a class="btn" href="#tarina" data-en="Read the story">Lue tarina</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="polku" class="sec polku" aria-labelledby="polku-title">
+    <div class="wrap polku-grid">
+      <figure class="mapcard">
+        <div class="browserbar" aria-hidden="true"><i></i><i></i><i></i><span>polku.si</span></div>
+        <canvas id="map" width="64" height="40" role="img"
+          aria-label="Pikselikartta: reitti kulkee metsän läpi, ylittää järven meloen ja nousee mäelle."
+          data-en-label="Pixel map: a route runs through the forest, paddles across a lake and climbs a hill."></canvas>
+        <figcaption><span><i class="key land"></i><span data-en="Cycling">Pyöräily</span></span><span><i class="key water"></i><span data-en="Paddling">Melonta</span></span></figcaption>
+      </figure>
+      <div>
+        <p class="sticker" data-en="Now playing">Nyt pelissä</p>
+        <h2 id="polku-title">Polku</h2>
+        <p class="lead" data-en="A free outdoor map and multi-sport route planner for Finland. It runs in the browser on your phone or computer, with no install and no account.">Ilmainen ulkoilukartta ja monilajinen reittisuunnittelija koko Suomeen. Toimii selaimessa puhelimella ja koneella, ilman asennusta ja tiliä.</p>
+        <ul class="feats">
+          <li data-en="Mix sports in one trip: cycle to the shore, paddle across and run on an island.">Yhdistä lajeja samalle reissulle: pyöräile rantaan, melo yli ja juokse saaressa.</li>
+          <li data-en="Weather along the route at the time you get there: wind, temperature and rain.">Sää reitin varrella juuri silloin, kun olet kohdalla: tuuli, lämpötila ja sade.</li>
+          <li data-en="Trail difficulty, fallen trees and access restrictions on the map and in the route check.">Polkujen vaikeus, kaatuneet puut ja kulkurajoitukset kartalla ja reitin tarkistuksessa.</li>
+        </ul>
+        <ul class="chips">
+          <li data-en="Mountain biking">Maastopyöräily</li>
+          <li>Gravel</li>
+          <li data-en="Road cycling">Maantiepyöräily</li>
+          <li data-en="Hiking">Vaellus</li>
+          <li data-en="Trail running">Polkujuoksu</li>
+          <li data-en="Running">Juoksu</li>
+          <li data-en="Paddling">Melonta</li>
+          <li data-en="Swimming">Uinti</li>
+        </ul>
+        <a class="btn dark" href="https://polku.si/" data-en="Open Polku">Avaa Polku</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="tarina" class="sec" aria-labelledby="tarina-title">
+    <div class="wrap">
+      <div class="story-head">
+        <h2 id="tarina-title" data-en="The story, level by level">Tarina tasoittain</h2>
+        <p class="lead" data-en="From mini games to graphic design, the web and IT. All of it is behind Polku.">Minipeleistä graafiseen suunnitteluun, webiin ja IT:hen. Kaikki se on Polun takana.</p>
+      </div>
+      <ol class="levels">
+        <li class="level">
+          <div class="lvl-top"><span class="no" data-en="Level 1">Taso 1</span><span class="year">1999</span></div>
+          <div class="body">
+            <h3 data-en="First games">Ensimmäiset pelit</h3>
+            <p data-en="Twelve-year-old Tommi starts Ducksoft and builds mini games for his friends with The Games Factory.">12-vuotias Tommi perustaa Ducksoftin ja tekee The Games Factory -ohjelmalla minipelejä kavereilleen.</p>
+          </div>
+        </li>
+        <li class="level">
+          <div class="lvl-top"><span class="no" data-en="Level 2">Taso 2</span><span class="year">2004</span></div>
+          <div class="body">
+            <h3 data-en="First job">Ensimmäinen työ</h3>
+            <p data-en="A summer job as a graphic designer at 15: print ads and brochures for Yamaha, Orion and Dressmann.">15-vuotiaana kesätöissä graafikkona: printtimainoksia ja esitteitä Yamahalle, Orionille ja Dressmannille.</p>
+          </div>
+        </li>
+        <li class="level">
+          <div class="lvl-top"><span class="no" data-en="Level 3">Taso 3</span><span class="year">2008</span></div>
+          <div class="body">
+            <h3 data-en="Media assistant">Media-assistentti</h3>
+            <p data-en="Graduates as a media assistant and makes printed marketing material as a marketing assistant at 3M.">Media-assistentiksi Omniasta ja markkinointiassistentiksi 3M:lle tekemään painettua markkinointia.</p>
+          </div>
+        </li>
+        <li class="level paused">
+          <div class="lvl-top"><span class="no" data-en="Paused">Tauko</span><span class="year">2009</span></div>
+          <div class="body">
+            <h3 data-en="Game paused">Peli pysähtyy</h3>
+            <p data-en="Military service, a construction site and engineering studies at Metropolia.">Armeija, rakennustyömaa ja insinööriopintoja Metropoliassa.</p>
+          </div>
+        </li>
+        <li class="level continue">
+          <div class="lvl-top"><span class="no" data-en="Continue">Jatka</span><span class="year">2014</span></div>
+          <div class="body">
+            <h3 data-en="Ducksoft returns">Ducksoft palaa</h3>
+            <p data-en="Freelance logos, identities and websites, plus design and webmaster work for student associations.">Freelancerina logoja, ilmeitä ja verkkosivuja. Lisäksi opiskelijajärjestöjen graafikko ja webmaster.</p>
+          </div>
+        </li>
+        <li class="level">
+          <div class="lvl-top"><span class="no" data-en="Level 4">Taso 4</span><span class="year">2015</span></div>
+          <div class="body">
+            <h3 data-en="Web developer">Web-kehittäjä</h3>
+            <p data-en="Responsive websites and online shops at Online Solutions, plus work on the OnlineBusiness ERP.">Online Solutionsilla responsiivisia sivustoja ja verkkokauppoja sekä OnlineBusiness-toiminnanohjausjärjestelmää.</p>
+          </div>
+        </li>
+        <li class="level">
+          <div class="lvl-top"><span class="no" data-en="Level 5">Taso 5</span><span class="year">2017</span></div>
+          <div class="body">
+            <h3>Nordic Business Forum</h3>
+            <p data-en="Design and Development Specialist: websites, online shops, the live stream platform and event materials for Finland, Sweden and Norway.">Design and Development Specialist: verkkosivut, verkkokaupat, striimialusta ja tapahtumamateriaalit Suomeen, Ruotsiin ja Norjaan.</p>
+          </div>
+        </li>
+        <li class="level boss">
+          <div class="lvl-top"><span class="no" data-en="Level 6">Taso 6</span><span class="year">2020</span></div>
+          <div class="body">
+            <h3 data-en="Head of Digital Development and IT">Digikehityksen ja IT:n vetäjä</h3>
+            <p data-en="In charge of Nordic Business Forum’s IT and digital development: web services, Salesforce, marketing automation, IT security and data quality.">Vastuulla Nordic Business Forumin IT ja digikehitys: verkkopalvelut, Salesforce, markkinoinnin automaatio, tietoturva ja datan laatu.</p>
+          </div>
+        </li>
+        <li class="level now">
+          <div class="lvl-top"><span class="no" data-en="Level 7: now">Taso 7: nyt</span><span class="year">2026</span></div>
+          <div class="body">
+            <div>
+              <h3>Polku</h3>
+              <p data-en="Ducksoft is now home to Tommi’s own projects. First up: Polku, a map and route planner for getting outdoors.">Ducksoft on nyt Tommin omien projektien koti. Ensimmäisenä Polku, kartta ja reittisuunnittelija ulkoiluun.</p>
+            </div>
+            <a class="btn primary" href="https://polku.si/" data-en="Open Polku">Avaa Polku</a>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="osaaminen" class="sec skills" aria-labelledby="osaaminen-title">
+    <div class="wrap">
+      <div class="story-head">
+        <h2 id="osaaminen-title" data-en="Inventory">Inventaario</h2>
+        <p class="lead" data-en="What over twenty years of work has left in the backpack.">Mitä yli 20 vuoden aikana on kertynyt reppuun.</p>
+      </div>
+      <div class="items">
+        <article class="item">
+          <svg class="px" data-sprite="screen" viewBox="0 0 12 12" aria-hidden="true"></svg>
+          <h3 data-en="Websites and online shops">Verkkosivut ja -kaupat</h3>
+          <p data-en="Design, build and upkeep, from small sites to e-commerce and streaming.">Suunnittelu, toteutus ja ylläpito pienistä sivuista verkkokauppoihin ja striimaukseen.</p>
+          <ul class="chips"><li>WordPress</li><li>WooCommerce</li><li>PHP</li><li>JavaScript</li><li>HTML &amp; CSS</li><li>Git</li></ul>
+        </article>
+        <article class="item">
+          <svg class="px" data-sprite="pencil" viewBox="0 0 12 12" aria-hidden="true"></svg>
+          <h3 data-en="Graphic design">Graafinen suunnittelu</h3>
+          <p data-en="Identities, UI and UX, and event materials for print and digital.">Ilmeet, käyttöliittymät ja tapahtumamateriaalit printtiin ja digiin.</p>
+          <ul class="chips"><li>Illustrator</li><li>Photoshop</li><li>InDesign</li><li>Premiere</li><li>After Effects</li><li>AutoCAD</li></ul>
+        </article>
+        <article class="item">
+          <svg class="px" data-sprite="lock" viewBox="0 0 12 12" aria-hidden="true"></svg>
+          <h3 data-en="Data and IT">Data ja IT</h3>
+          <p data-en="CRM and marketing automation fitted to the business, reports, data quality and IT security.">CRM ja markkinoinnin automaatio liiketoiminnan tarpeisiin, raportit, datan laatu ja tietoturva.</p>
+          <ul class="chips"><li>Salesforce</li><li>Pardot</li><li data-en="Dashboards">Dashboardit</li><li data-en="IT security">Tietoturva</li></ul>
+        </article>
+        <article class="item">
+          <svg class="px" data-sprite="chart" viewBox="0 0 12 12" aria-hidden="true"></svg>
+          <h3 data-en="Marketing">Markkinointi</h3>
+          <p data-en="Getting found and measuring what works. Google certified in search ads and analytics.">Löydettävyys ja sen mittaaminen, mikä toimii. Googlen sertifikaatit hakumainontaan ja analytiikkaan.</p>
+          <ul class="chips"><li>SEO</li><li>SEM</li><li>Google Analytics</li><li data-en="Social media">Some</li></ul>
+        </article>
+      </div>
+      <div class="extras">
+        <article class="item note">
+          <h3 data-en="Education">Koulutus</h3>
+          <ul class="list">
+            <li data-en="MSc (Econ), Information Systems Science, University of Jyväskylä">KTM, tietojärjestelmätiede, Jyväskylän yliopisto</li>
+            <li data-en="Engineering studies in IT and industrial management, Metropolia">Insinööriopintoja, tietotekniikka ja tuotantotalous, Metropolia</li>
+            <li data-en="Media Assistant, audiovisual communication, Omnia">Media-assistentti, audiovisuaalinen viestintä, Omnia</li>
+          </ul>
+        </article>
+        <article class="item note">
+          <h3 data-en="Side quests">Sivutehtävät</h3>
+          <ul class="list">
+            <li data-en="Moderator on the io-tech.fi forum, Finland’s busiest tech forum">Moderaattori io-tech.fi-keskustelupalstalla, Suomen vilkkaimmalla tekniikkafoorumilla</li>
+            <li data-en="Webmaster and graphic designer for student associations Pörssi, Dumppi and JES">Webmaster ja graafikko opiskelijajärjestöissä Pörssi, Dumppi ja JES</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="yhteys" class="sec contact" aria-labelledby="yhteys-title">
+    <div class="wrap contact-grid">
+      <div class="player">
+        <svg class="px tommi" data-sprite="tommi" viewBox="0 0 16 22" role="img" aria-label="Pikseli-Tommi" data-en-label="Pixel Tommi"></svg>
+        <div>
+          <h2 id="yhteys-title" data-en="Player 2, join in?">Pelaaja 2, liitytkö?</h2>
+          <p data-en="A question about Polku, or something else on your mind? Send an email.">Kysyttävää Polusta tai jotain muuta mielessä? Laita sähköpostia.</p>
+        </div>
+      </div>
+      <div class="actions">
+        <a class="btn dark mail" href="mailto:tommi@ducksoft.fi">tommi@ducksoft.fi</a>
+        <a class="btn" href="https://fi.linkedin.com/in/tommicontursi/">LinkedIn</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="lane" aria-hidden="true">
+    <div class="parade">
+      <svg class="px mama" data-sprite="duck" viewBox="0 0 16 16"></svg>
+      <svg class="px kid" data-sprite="duck" viewBox="0 0 16 16"></svg>
+      <svg class="px kid" data-sprite="duck" viewBox="0 0 16 16"></svg>
+      <svg class="px kid" data-sprite="duck" viewBox="0 0 16 16"></svg>
+      <svg class="px kid" data-sprite="duck" viewBox="0 0 16 16"></svg>
+    </div>
+  </div>
+  <div class="wrap">
+    <span>© 1999–<span data-year>2026</span> Tommi Contursi</span>
+    <span><span data-en="Hint:">Vinkki:</span> <kbd>↑ ↑ ↓ ↓ ← → ← → B A</kbd></span>
+  </div>
+</footer>
+
+<script>
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // HUD ticker on phones: a second copy of the items (before translation/score fill so both copies update)
+  const hudRow = document.querySelector(".hud .wrap");
+  [...hudRow.children].forEach(c => { const d = c.cloneNode(true); d.classList.add("dup"); hudRow.append(d); });
+
+  /* ---------- Sprites: one character per pixel, "." is transparent ---------- */
+  const PAL = { K: "#000", Y: "#ffd60a", S: "#e9a900", O: "#ff7a00", W: "#fff", B: "#2a5cff", L: "#a8c0ff", G: "#3ddc84",
+                H: "#6b3d1f", h: "#9a5a2c", F: "#f2c39b", f: "#d99a72", w: "#cfd6e6", P: "#1f2a5c" };
+  const SPR = {
+    duck: [
+      "......KKKK......", ".....KYYYYK.....", "....KYYYYYYK....", "....KYYYWKYK....",
+      "....KYYYKKYKKKK.", "....KYYYYYYKOOOK", "....KYYYYYYKKKK.", ".KK..KYYYYK.....",
+      "KYYK.KYYYYK.....", "KYYYYYYYYYYYK...", "KYYYYYYYYYYYYK..", "KYYSSYYYYYYYYK..",
+      ".KYYSSSSYYYYYK..", ".KYYYYYSSSYYYK..", "..KYYYYYYYYYK...", "...KKKKKKKKK....",
+    ],
+    flyUp: [
+      "..................", "...KK.....KKKK....", "...KYK...KYYYYK...", "....KYK..KYYWKYK..",
+      "....KYYK.KYYYYYKKK", "KKK.KYYYKKYYYYYOOK", "KYYKKYYYKYYYYYKKK.", "KYYYKYYYYYYYYYK...",
+      ".KYYYYYYYYYYYYK...", ".KYYSSYYYYYYYYK...", "..KYYYYYYYYYYK....", "...KKKKKKKKKK.....",
+      "..................", "..................",
+    ],
+    flyDown: [
+      "..................", "..........KKKK....", ".........KYYYYK...", ".........KYYWKYK..",
+      ".........KYYYYYKKK", "KKK......KYYYYYOOK", "KYYK....KYYYYYKKK.", "KYYYKKKKYYYYYYK...",
+      ".KYYYYYYYYYYYYK...", ".KYYYKKKKKYYYYK...", "..KYKYYYYYKYYK....", "...KKYYYYYKKK.....",
+      ".....KYYYK........", "......KKK.........",
+    ],
+    tommi: [
+      "....KKKKKKK.....", "...KHHHhhhHK....", "..KHHHHHHhhHK...", "..KHHHHHHHHHHK..",
+      "..KHFFFFFFFFHK..", "..KFFFFFFFFFFK..", ".KfFFKFFFFKFFfK.", ".KfFFFFFFFFFFfK.",
+      "..KFFKFFFFKFFK..", "..KFFFKKKKFFFK..", "...KFFFFFFFFK...", "....KKfFFfKK....",
+      "..KKWWKffKWWKK..", ".KWWWWWKKWWWWWK.", "KWWWWWWWKWWWWWWK", "KWwWWWWWKWWWWwWK",
+      "KFKWWWWWKWWWWKFK", ".KKPPPPPPPPPPKK.", "...KPPPPPPPPK...", "...KPPPKKPPPK...",
+      "...KPPK..KPPK...", "..KKKKK..KKKKK..",
+    ],
+    screen: [
+      "KKKKKKKKKKKK", "KBBBBBBBBBBK", "KBLLLLBBBBBK", "KBBBBBBBBBBK", "KBLLLBBLLLBK", "KBBBBBBBBBBK",
+      "KBLLLLLLLBBK", "KBBBBBBBBBBK", "KKKKKKKKKKKK", "....KKKK....", "...KKKKKK...", "............",
+    ],
+    pencil: [
+      ".........KK.", "........KOOK", ".......KYKOK", "......KYYYK.", ".....KYYYK..", "....KYYYK...",
+      "...KYYYK....", "..KYYYK.....", ".KWYYK......", ".KWWK.......", "KKKK........", "............",
+    ],
+    chart: [
+      "K...........", "K.......KKK.", "K.......KGK.", "K...KKK.KGK.", "K...KGK.KGK.", "K...KGK.KGK.",
+      "KKK.KGK.KGK.", "KGK.KGK.KGK.", "KGK.KGK.KGK.", "KGK.KGK.KGK.", "KKKKKKKKKKKK", "............",
+    ],
+    lock: [
+      "....KKKK....", "...K....K...", "..K......K..", "..K......K..", ".KKKKKKKKKK.", ".KYYYYYYYYK.",
+      ".KYYYKKYYYK.", ".KYYYKKYYYK.", ".KYYYYKYYYK.", ".KYYYYYYYYK.", ".KKKKKKKKKK.", "............",
+    ],
+  };
+  const NS = "http://www.w3.org/2000/svg";
+  function svgSprite(svg, rows) {
+    rows.forEach((row, y) => [...row].forEach((ch, x) => {
+      if (ch === ".") return;
+      const r = document.createElementNS(NS, "rect");
+      for (const [k, v] of Object.entries({ x, y, width: 1, height: 1, fill: PAL[ch] })) r.setAttribute(k, v);
+      svg.appendChild(r);
+    }));
+  }
+  document.querySelectorAll("[data-sprite]").forEach(svg => svgSprite(svg, SPR[svg.dataset.sprite]));
+  function blit(c, rows, x, y, p, flipX = false, flipY = false) {
+    const w = rows[0].length, h = rows.length;
+    rows.forEach((row, ry) => [...row].forEach((ch, rx) => {
+      if (ch === ".") return;
+      c.fillStyle = PAL[ch];
+      c.fillRect(x + (flipX ? w - 1 - rx : rx) * p, y + (flipY ? h - 1 - ry : ry) * p, p, p);
+    }));
+  }
+
+  /* ---------- Language ---------- */
+  const T = {
+    fi: { title: "Ducksoft – omien projektien koti vuodesta 1999", quack: "Kvaak!", miss: "Ohi!" },
+    en: { title: "Ducksoft – home of Tommi Contursi’s own projects since 1999", quack: "Quack!", miss: "Miss!" },
+  };
+  let lang = "fi";
+  function fillYears() {
+    const now = new Date().getFullYear();
+    document.querySelectorAll("[data-years]").forEach(el => el.textContent = now - 1999);
+    document.querySelectorAll("[data-year]").forEach(el => el.textContent = now);
+  }
+  function setLang(l) {
+    lang = l;
+    document.documentElement.lang = l;
+    document.title = T[l].title;
+    document.querySelectorAll("[data-en]").forEach(el => {
+      el.dataset.fi ??= el.textContent;
+      el.textContent = l === "en" ? el.dataset.en : el.dataset.fi;
+    });
+    document.querySelectorAll("[data-en-label]").forEach(el => {
+      el.dataset.fiLabel ??= el.getAttribute("aria-label");
+      el.setAttribute("aria-label", l === "en" ? el.dataset.enLabel : el.dataset.fiLabel);
+    });
+    document.querySelectorAll("[data-lang]").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === l));
+    fillYears();
+    try { localStorage.setItem("lang", l); } catch {}
+  }
+  document.querySelectorAll("[data-lang]").forEach(b => b.addEventListener("click", () => setLang(b.dataset.lang)));
+  let saved = null;
+  try { saved = localStorage.getItem("lang"); } catch {}
+  setLang(saved === "fi" || saved === "en" ? saved : (navigator.language || "").toLowerCase().startsWith("fi") ? "fi" : "en");
+
+  /* ---------- Score ---------- */
+  let score = 0, hi = 0;
+  try { hi = +localStorage.getItem("hi") || 0; } catch {}
+  const pad = n => String(n).padStart(5, "0");
+  function showScore() {
+    document.querySelectorAll("[data-score]").forEach(el => el.textContent = pad(score));
+    document.querySelectorAll("[data-hi]").forEach(el => el.textContent = pad(hi));
+  }
+  showScore();
+
+  /* ---------- Hero: pixel-block wordmark, flying ducks, Tommi on the shore ---------- */
+  const GLYPHS = {
+    D: ["XXXX.", "X...X", "X...X", "X...X", "X...X", "X...X", "XXXX."],
+    U: ["X...X", "X...X", "X...X", "X...X", "X...X", "X...X", ".XXX."],
+    C: [".XXXX", "X....", "X....", "X....", "X....", "X....", ".XXXX"],
+    K: ["X...X", "X..X.", "X.X..", "XX...", "X.X..", "X..X.", "X...X"],
+    S: [".XXXX", "X....", "X....", ".XXX.", "....X", "....X", "XXXX."],
+    O: [".XXX.", "X...X", "X...X", "X...X", "X...X", "X...X", ".XXX."],
+    F: ["XXXXX", "X....", "X....", "XXXX.", "X....", "X....", "X...."],
+    T: ["XXXXX", "..X..", "..X..", "..X..", "..X..", "..X..", "..X.."],
+  };
+  // stepped 8-bit shading, one colour per glyph row (7 rows)
+  const RAMP = { duck: ["#fff3a0", "#ffe55c", "#ffd60a", "#ffd60a", "#f5bf00", "#e9a900", "#d99400"],
+                 beak: ["#ffc48a", "#ffa04d", "#ff7a00", "#ff7a00", "#f06a00", "#e05a00", "#c94a00"] };
+  const play = document.getElementById("play");
+  const ctx = play.getContext("2d");
+  let letters = [], B = 20, W = 0, H = 0, P = 4, waterTop = 0, shoreW = 0, t0 = performance.now(), first = true;
+  const ptr = { x: -1e4, y: -1e4, mouse: false };
+  const swimmer = { x: 200, dir: 1, jumpAt: -1e4, say: "" };
+  const tommi = { jumpAt: -1e4 };
+  const flyers = [{ state: "gone", respawnAt: 1700 }, { state: "gone", respawnAt: 3200 }];
+  const fx = []; // short-lived effects: +100 popups, shot bursts, splashes
+
+  function layout() {
+    W = play.clientWidth;
+    const lines = W < 640 ? ["DUCK", "SOFT"] : ["DUCKSOFT"];
+    const cols = Math.max(...lines.map(l => l.length * 6 - 1));
+    const rows = lines.length * 8 - 1;
+    B = Math.floor(W / (cols + 1));
+    P = Math.max(3, Math.round(B / 5));
+    const top = Math.round(B * 1.2);
+    waterTop = top + rows * B + Math.max(Math.round(B * 1.6) + 11 * P, 25 * P);
+    H = waterTop + 7 * P;
+    shoreW = 20 * P;
+    const dpr = devicePixelRatio || 1;
+    play.style.height = H + "px";
+    play.width = Math.round(W * dpr); play.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const ox = Math.round((W - cols * B) / 2);
+    letters = [];
+    lines.forEach((line, li) => {
+      const lx = ox + Math.round((cols - (line.length * 6 - 1)) / 2) * B;
+      [...line].forEach((ch, ci) => {
+        const g = GLYPHS[ch], cells = [];
+        g.forEach((row, ry) => [...row].forEach((c, rx) => { if (c === "X") cells.push([rx, ry, ry === 0 || g[ry - 1][rx] !== "X"]); }));
+        const second = lines.length === 1 ? ci >= 4 : li === 1;
+        letters.push({ x: lx + ci * 6 * B, y: top + li * 8 * B, cells, ramp: second ? RAMP.beak : RAMP.duck,
+                       dy: first && !still ? -(top + (li * 8 + 8) * B + 60) : 0, vy: 0, delay: letters.length * 110 });
+      });
+    });
+    swimmer.x = Math.max(shoreW + 8, Math.min(swimmer.x, W - 16 * P - 8));
+    if (first) t0 = performance.now();
+    first = false;
+    if (still) draw(performance.now());
+  }
+
+  function spawn(f, now) {
+    const fromLeft = Math.random() < 0.5, speed = (1.7 + Math.random() * 1.3) * P / 4;
+    Object.assign(f, { state: "fly", x: fromLeft ? -18 * P : W, y: B + Math.random() * (waterTop - 34 * P - B),
+                       vx: fromLeft ? speed : -speed, vy: (Math.random() - 0.5) * 1.2, seed: Math.random() * 9, t: now });
+  }
+
+  function step(now) {
+    for (const L of letters) {
+      if (now - t0 < L.delay) continue;
+      L.vy = (L.vy - L.dy * 0.09) * 0.8; L.dy += L.vy; // spring back to rest with a bounce
+    }
+    swimmer.x += swimmer.dir * 0.7;
+    if (swimmer.x > W - 16 * P - 8) swimmer.dir = -1;
+    if (swimmer.x < shoreW + 8) swimmer.dir = 1;
+    const yMax = waterTop - 30 * P;
+    for (const f of flyers) {
+      if (f.state === "gone") { if (now - t0 > f.respawnAt) spawn(f, now); continue; }
+      if (f.state === "fly") {
+        f.x += f.vx; f.y += f.vy + Math.sin(now / 280 + f.seed) * 0.7;
+        if (f.y < 4) f.vy = Math.abs(f.vy) + 0.3;
+        if (f.y > yMax) f.vy = -Math.abs(f.vy) - 0.3;
+        if (f.x < -24 * P || f.x > W + 6 * P) { f.state = "gone"; f.respawnAt = now - t0 + 500 + Math.random() * 1500; }
+      } else if (f.state === "hit" && now - f.t > 380) { f.state = "fall"; f.vy = 0; }
+      else if (f.state === "fall") {
+        f.vy += 0.45 * P / 4; f.y += f.vy;
+        if (f.y > waterTop - 8 * P) {
+          f.state = "gone"; f.respawnAt = now - t0 + 1300;
+          fx.push({ kind: "splash", x: f.x + 9 * P, y: waterTop, t: now });
+        }
+      }
+    }
+  }
+
+  function draw(now) {
+    ctx.clearRect(0, 0, W, H);
+    // solid arcade title: extrusion, outline, then shaded fill with a shine sweeping across
+    const ext = Math.max(4, Math.round(B * 0.35)), ol = Math.max(3, Math.round(B * 0.16)), hl = Math.max(2, Math.round(B * 0.16));
+    const sweep = still ? -1e9 : ((now - t0 - 1800) % 5200) / 5200 * (W + 800) - 400;
+    ctx.fillStyle = "#000";
+    for (const L of letters) {
+      const ly = Math.round(L.y + L.dy);
+      for (const [cx, cy] of L.cells) {
+        ctx.fillRect(L.x + cx * B - ol, ly + cy * B - ol, B + 2 * ol, B + 2 * ol);
+        ctx.fillRect(L.x + cx * B, ly + cy * B, B + ext + ol, B + ext + ol);
+      }
+    }
+    for (const L of letters) {
+      const ly = Math.round(L.y + L.dy);
+      for (const [cx, cy, topEdge] of L.cells) {
+        const x = L.x + cx * B, y = ly + cy * B;
+        ctx.fillStyle = L.ramp[cy]; ctx.fillRect(x, y, B, B);
+        if (topEdge) { ctx.fillStyle = "rgba(255,255,255,.7)"; ctx.fillRect(x, y, B, hl); }
+        const d = x + (y - L.y) * 0.7 - sweep;
+        if (d > 0 && d < B * 1.2) { ctx.fillStyle = "rgba(255,255,255,.6)"; ctx.fillRect(x, y, B, B); }
+      }
+    }
+    const arc = (at, ms, h) => { const t = (now - at) / ms; return t >= 0 && t < 1 ? Math.round(Math.sin(t * Math.PI) * h) * P : 0; };
+    // swimmer
+    const bob = still ? 0 : (Math.floor(now / 400) % 2) * P;
+    const sx = Math.round(swimmer.x / P) * P, sy = waterTop - 11 * P + bob - arc(swimmer.jumpAt, 520, 8);
+    blit(ctx, SPR.duck, sx, sy, P, swimmer.dir < 0);
+    // water
+    const edge = Math.max(3, P);
+    ctx.fillStyle = "#000"; ctx.fillRect(0, waterTop, W, edge);
+    ctx.fillStyle = "#1b3fbf"; ctx.fillRect(0, waterTop + edge, W, H);
+    ctx.fillStyle = "#8fa9ff";
+    const phase = still ? 0 : Math.floor(now / 350);
+    for (let x = shoreW, i = 0; x < W; x += 6 * P, i++) if ((i + phase) % 3 === 0) ctx.fillRect(x, waterTop + 2 * P + (i % 2) * P, 3 * P, P);
+    // shore and Tommi
+    ctx.fillStyle = "#000"; ctx.fillRect(0, waterTop - 2 * P, shoreW + edge, H);
+    ctx.fillStyle = "#3ddc84"; ctx.fillRect(0, waterTop - 2 * P + edge, shoreW, 2 * P);
+    ctx.fillStyle = "#9a5a2c"; ctx.fillRect(0, waterTop + edge + P, shoreW, H);
+    blit(ctx, SPR.tommi, 2 * P, waterTop - 24 * P - arc(tommi.jumpAt, 450, 6), P);
+    // flying ducks
+    for (const f of flyers) {
+      if (f.state === "gone") continue;
+      const frame = f.state !== "fly" || Math.floor(now / 140) % 2 ? SPR.flyUp : SPR.flyDown;
+      blit(ctx, frame, Math.round(f.x / P) * P, Math.round(f.y / P) * P, P, f.vx < 0, f.state === "fall");
+    }
+    // effects
+    const fs = Math.max(14, 4 * P);
+    ctx.font = `700 ${fs}px "Pixelify Sans", monospace`; ctx.textBaseline = "middle";
+    for (let i = fx.length - 1; i >= 0; i--) {
+      const e = fx[i], t = now - e.t;
+      if (t > 900) { fx.splice(i, 1); continue; }
+      if (e.kind === "burst" && t < 140) {
+        ctx.fillStyle = "#fff";
+        for (const [dx, dy] of [[0, -3], [0, 3], [-3, 0], [3, 0], [-2, -2], [2, 2], [-2, 2], [2, -2]]) ctx.fillRect(e.x + dx * P - P / 2, e.y + dy * P - P / 2, P, P);
+      } else if (e.kind === "points") {
+        const y = e.y - t / 20;
+        ctx.fillStyle = "#000"; ctx.fillText("+100", e.x + 2, y + 2);
+        ctx.fillStyle = "#ffd60a"; ctx.fillText("+100", e.x, y);
+      } else if (e.kind === "splash" && t < 500) {
+        ctx.fillStyle = "#fff";
+        const r = Math.floor(t / 100) + 1;
+        for (const dx of [-3, -1, 1, 3]) ctx.fillRect(e.x + dx * r * P / 2, e.y - (4 - Math.abs(dx)) * r * P / 2, P, P);
+      }
+    }
+    // speech bubble for the swimmer
+    const jt = (now - swimmer.jumpAt) / 1000;
+    if (jt >= 0 && jt < 1) {
+      const txt = swimmer.say, tw = ctx.measureText(txt).width, bw = tw + 4 * P, bh = fs + 2 * P;
+      let bx = sx + (swimmer.dir > 0 ? 12 * P : -bw + 4 * P), by = sy - bh - P;
+      bx = Math.max(4, Math.min(W - bw - 4, bx));
+      ctx.fillStyle = "#000"; ctx.fillRect(bx, by, bw, bh);
+      ctx.fillStyle = "#fff"; ctx.fillRect(bx + 3, by + 3, bw - 6, bh - 6);
+      ctx.fillStyle = "#000"; ctx.fillText(txt, bx + 2 * P, by + bh / 2 + 1);
+    }
+    // crosshair follows the mouse
+    if (ptr.mouse && ptr.x > -1e3) {
+      const s = Math.max(3, Math.round(P * 0.75)), x = Math.round(ptr.x), y = Math.round(ptr.y);
+      const bars = [[x - s / 2, y - 5 * s, s, 3 * s], [x - s / 2, y + 2 * s, s, 3 * s], [x - 5 * s, y - s / 2, 3 * s, s], [x + 2 * s, y - s / 2, 3 * s, s], [x - s / 2, y - s / 2, s, s]];
+      ctx.fillStyle = "#fff"; for (const [a, b, c, d] of bars) ctx.fillRect(a - 2, b - 2, c + 4, d + 4);
+      ctx.fillStyle = "#000"; for (const [a, b, c, d] of bars) ctx.fillRect(a, b, c, d);
+    }
+  }
+
+  function shoot(px, py, now) {
+    fx.push({ kind: "burst", x: px, y: py, t: now });
+    const pad = 2 * P;
+    const hit = flyers.find(f => f.state === "fly" && px > f.x - pad && px < f.x + 18 * P + pad && py > f.y - pad && py < f.y + 14 * P + pad);
+    if (hit) {
+      hit.state = "hit"; hit.t = now;
+      score += 100; if (score > hi) { hi = score; try { localStorage.setItem("hi", hi); } catch {} }
+      showScore();
+      fx.push({ kind: "points", x: hit.x + 4 * P, y: hit.y, t: now });
+      tommi.jumpAt = now;
+      return;
+    }
+    const L = letters.find(L => L.cells.some(([cx, cy]) =>
+      px >= L.x + cx * B && px < L.x + (cx + 1) * B && py >= L.y + L.dy + cy * B && py < L.y + L.dy + (cy + 1) * B));
+    if (L) L.vy -= B * 0.45; // a stray shot knocks the letter up
+    swimmer.jumpAt = now; swimmer.say = Math.random() < 0.5 ? T[lang].quack : T[lang].miss;
+  }
+
+  let running = false, raf = 0;
+  function loop(now) { step(now); draw(now); raf = requestAnimationFrame(loop); }
+  function setRunning(on) {
+    if (still || on === running) return;
+    running = on;
+    on ? (raf = requestAnimationFrame(loop)) : cancelAnimationFrame(raf);
+  }
+  new IntersectionObserver(([e]) => setRunning(e.isIntersecting)).observe(play);
+  new ResizeObserver(() => { if (play.clientWidth !== W) layout(); }).observe(play);
+
+  play.addEventListener("pointermove", e => {
+    const r = play.getBoundingClientRect(); ptr.x = e.clientX - r.left; ptr.y = e.clientY - r.top; ptr.mouse = e.pointerType === "mouse";
+  });
+  play.addEventListener("pointerleave", () => { ptr.x = ptr.y = -1e4; });
+  play.addEventListener("pointerdown", e => {
+    if (still) return;
+    const r = play.getBoundingClientRect();
+    shoot(e.clientX - r.left, e.clientY - r.top, performance.now());
+    if (e.pointerType !== "mouse") setTimeout(() => { ptr.x = ptr.y = -1e4; }, 50);
+  });
+  document.fonts?.load('700 16px "Pixelify Sans"');
+  layout();
+
+  /* ---------- Polku: pixel terrain map with a route that draws itself ---------- */
+  const map = document.getElementById("map"), m = map.getContext("2d");
+  const MW = map.width, MH = map.height;
+  const isLake = (x, y) => ((x - 30) / 10.5) ** 2 + ((y - 24) / 6.5) ** 2 + Math.sin(x * 0.9 + y) * 0.12 < 1;
+  const height = (x, y) => Math.sin(x * 0.13 + 1) + Math.cos(y * 0.19) * 0.9 + Math.sin((x + y) * 0.08) * 0.7 + Math.cos(x * 0.05 - y * 0.15 + 2) * 0.6 - (y < 14 && x > 40 ? -0.8 : 0);
+  const LAND = ["#9ef0b9", "#3ddc84", "#27b46a", "#1d8f53", "#f2e7c2"];
+  const band = (x, y) => isLake(x, y) ? -1 : Math.max(0, Math.min(LAND.length - 1, Math.floor((height(x, y) + 2.6) / 1.15)));
+  function drawTerrain() {
+    for (let y = 0; y < MH; y++) for (let x = 0; x < MW; x++) {
+      const b = band(x, y), r = x + 1 < MW ? band(x + 1, y) : b, d = y + 1 < MH ? band(x, y + 1) : b;
+      m.fillStyle = b !== r || b !== d ? "#000" : b < 0 ? ((x * 7 + y * 3) % 23 === 0 ? "#8fa9ff" : "#2a5cff") : LAND[b];
+      m.fillRect(x, y, 1, 1);
+    }
+  }
+  const WAY = [[3, 36], [9, 33], [14, 31], [17, 27], [21, 24], [30, 22], [39, 23], [44, 19], [46, 14], [51, 11], [55, 7], [59, 5]];
+  const route = [];
+  for (let i = 1; i < WAY.length; i++) {
+    let [x0, y0] = WAY[i - 1]; const [x1, y1] = WAY[i];
+    const dx = Math.abs(x1 - x0), dy = -Math.abs(y1 - y0), sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1;
+    let err = dx + dy;
+    while (x0 !== x1 || y0 !== y1) { // Bresenham, 4-connected so the line has no diagonal gaps
+      route.push([x0, y0]);
+      if (2 * err >= dy && (2 * err - dy) > (dx - 2 * err)) { err += dy; x0 += sx; } else { err += dx; y0 += sy; }
+    }
+  }
+  route.push(WAY[WAY.length - 1]);
+  function drawRoute(n) {
+    for (let i = 0; i < n; i++) {
+      const [x, y] = route[i];
+      m.fillStyle = isLake(x, y) ? "#fff" : "#ff7a00";
+      m.fillRect(x, y, 1, 1);
+    }
+    const [sx, sy] = route[0];
+    m.fillStyle = "#000"; m.fillRect(sx - 1, sy - 1, 3, 3); m.fillStyle = "#fff"; m.fillRect(sx, sy, 1, 1);
+    if (n >= route.length) {
+      const [ex, ey] = route[route.length - 1];
+      m.fillStyle = "#000"; m.fillRect(ex, ey - 5, 1, 6);
+      m.fillStyle = "#ffd60a"; m.fillRect(ex + 1, ey - 5, 3, 2);
+      m.fillStyle = "#000"; m.fillRect(ex + 4, ey - 5, 1, 2); m.fillRect(ex + 1, ey - 3, 4, 1);
+    }
+  }
+  drawTerrain();
+  if (still) drawRoute(route.length);
+  else new IntersectionObserver(([e], io) => {
+    if (!e.isIntersecting) return;
+    io.disconnect();
+    const start = performance.now();
+    (function grow(now) {
+      const n = Math.min(route.length, Math.floor((now - start) / 1600 * route.length));
+      drawTerrain(); drawRoute(n);
+      if (n < route.length) requestAnimationFrame(grow);
+    })(start);
+  }, { threshold: 0.5 }).observe(map);
+
+  /* ---------- Konami code: it rains ducks ---------- */
+  const code = ["arrowup", "arrowup", "arrowdown", "arrowdown", "arrowleft", "arrowright", "arrowleft", "arrowright", "b", "a"];
+  let pos = 0;
+  addEventListener("keydown", e => {
+    const k = e.key.toLowerCase();
+    pos = k === code[pos] ? pos + 1 : (k === code[0] ? 1 : 0);
+    if (pos < code.length) return;
+    pos = 0;
+    if (still) return;
+    for (let i = 0; i < 40; i++) {
+      const s = document.createElementNS(NS, "svg");
+      s.setAttribute("viewBox", "0 0 16 16"); s.setAttribute("class", "px rain"); s.setAttribute("aria-hidden", "true");
+      svgSprite(s, SPR.duck);
+      Object.assign(s.style, { left: Math.random() * 100 + "vw", animationDuration: 1.5 + Math.random() * 2 + "s", animationDelay: Math.random() * 1.5 + "s" });
+      s.addEventListener("animationend", () => s.remove());
+      document.body.appendChild(s);
+    }
+  });
+</script>
+</body>
+</html>
